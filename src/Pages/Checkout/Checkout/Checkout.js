@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { useSericeDetail } from '../../../hooks/useServiceDetail'
+import useServiceDetail from '../../../hooks/useServiceDetail'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import auth from '../../../firebase.init'
 import axios from 'axios'
@@ -8,21 +8,24 @@ import { toast } from 'react-toastify'
 
 const Checkout = () => {
   const { serviceId } = useParams()
-  const [service] = useSericeDetail(serviceId)
+  const [service] = useServiceDetail(serviceId)
   const [user] = useAuthState(auth)
 
-  /* const [user, setUser] = useState({
-    name: 'jack sparrow',
-    email: 'jack@pirates.net',
-    address: 'open ocean',
-    phone: '0171111111',
-  }) */
+  // const [user, setUser] = useState({
+  //     name: 'Akbar The Great',
+  //     email: 'akbar@momo.taj',
+  //     address: 'Tajmohol Road Md.pur',
+  //     phone: '01711111111'
+  // });
 
-  /* const handleAddressChange = (e) => {
-    setUser({ ...user, address: e.target.value })
-  } */
-
-  //   console.log(user)
+  // const handleAddressChange = event =>{
+  //     console.log(event.target.value);
+  //     const {address, ...rest} = user;
+  //     const newAddress = event.target.value;
+  //     const newUser = {address: newAddress, ...rest};
+  //     console.log(newUser);
+  //     setUser(newUser);
+  // }
 
   const handlePlaceOrder = (event) => {
     event.preventDefault()
@@ -33,75 +36,71 @@ const Checkout = () => {
       address: event.target.address.value,
       phone: event.target.phone.value,
     }
-
-    axios.post('http://localhost:5000/orders', order).then((res) => {
-      const {data} = res
-      if (data.insertedId) {
-          toast('your order is booked!')
+    axios
+      .post('https://limitless-fortress-61012.herokuapp.com/orders', order)
+      .then((response) => {
+        const { data } = response
+        if (data.insertedId) {
+          toast('Your order is booked!!!')
           event.target.reset()
-      }
-    })
+        }
+      })
   }
 
   return (
-    <div className='w-50 mx-auto text-center'>
+    <div className='w-50 mx-auto'>
       <h2>Please Order: {service.name}</h2>
-      <form
-        onSubmit={handlePlaceOrder}
-        className='w-100 d-flex flex-column mt-5 mx-auto border p-3'
-      >
+      <form onSubmit={handlePlaceOrder}>
         <input
+          className='w-100 mb-2'
           type='text'
-          name='name'
           value={user?.displayName}
-          placeholder='enter name'
+          name='name'
+          placeholder='name'
           required
-          className='border p-2 rounded'
           readOnly
           disabled
         />
         <br />
         <input
+          className='w-100 mb-2'
           type='email'
-          name='email'
           value={user?.email}
-          placeholder='enter email'
+          name='email'
+          placeholder='email'
           required
-          className='border p-2 rounded'
           readOnly
           disabled
         />
         <br />
         <input
+          className='w-100 mb-2'
           type='text'
-          name='service'
           value={service.name}
-          placeholder='enter service'
+          name='service'
+          placeholder='service'
           required
-          className='border p-2 rounded'
+          readOnly
         />
         <br />
         <input
+          className='w-100 mb-2'
           type='text'
           name='address'
-          value={user.address}
-          placeholder='enter address'
-          required
-          className='border p-2 rounded'
+          placeholder='address'
           autoComplete='off'
+          required
         />
         <br />
         <input
+          className='w-100 mb-2'
           type='text'
           name='phone'
-          value={user.phone}
-          placeholder='enter phone'
+          placeholder='phone'
           required
-          className='border p-2 rounded'
-          autoComplete='off'
         />
         <br />
-        <input type='submit' value='order' className='btn btn-primary' />
+        <input className='btn btn-primary' type='submit' value='Place Order' />
       </form>
     </div>
   )

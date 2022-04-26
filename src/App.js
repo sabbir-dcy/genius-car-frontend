@@ -19,7 +19,6 @@ function App() {
   return (
     <div>
       <Header></Header>
-      <ToastContainer></ToastContainer>
       <Routes>
         <Route path="/" element={<Home></Home>}></Route>
         <Route path="/home" element={<Home></Home>}></Route>
@@ -50,6 +49,7 @@ function App() {
         <Route path="*" element={<NotFound></NotFound>}></Route>
       </Routes>
       <Footer></Footer>
+      <ToastContainer />
     </div>
   );
 }
